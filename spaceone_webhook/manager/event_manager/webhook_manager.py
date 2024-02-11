@@ -56,7 +56,7 @@ class WebhookManager(BaseManager):
                 'metrics_groups': metrics_groups_data,
                 'monitor_groups': monitor_groups_data,
                 'notifications': notifications_data,
-                'details' : details_data
+                'details': details_data
 
 
             }
@@ -64,18 +64,7 @@ class WebhookManager(BaseManager):
             _LOGGER.debug(f"[Ncloud Webhook] parse => {webhook_data}")
 
         return results
-            # cloud_service = make_cloud_service(
-            #     name=webhook_instance['groupName'],
-            #     region_code=webhook_instance['regionCode'],
-            #     cloud_service_type=self.cloud_service_type,
-            #     cloud_service_group=self.cloud_service_group,
-            #     provider=self.provider,
-            #     data=webhook_data,
-            # )
-            # yield make_response(
-            #     cloud_service=cloud_service,
-            #     match_keys=[["name", "reference.resource_id", "account", "provider"]],
-            # )
+
 
 def get_metrics_data(instance):
     metrics_data =[]
