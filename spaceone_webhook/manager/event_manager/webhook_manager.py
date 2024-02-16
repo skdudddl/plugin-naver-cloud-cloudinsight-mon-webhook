@@ -1,49 +1,78 @@
 import logging
+import json
 from spaceone.core.manager import BaseManager
 from spaceone.inventory.plugin.collector.lib import *
 from spaceone_webhook.connector.webhook_connector import WebhookConnector
+from spaceone_webhook.manager.event_manager.base import ParseManager
 
 _LOGGER = logging.getLogger("spaceone")
 
 
-class WebhookManager(BaseManager):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class WebhookManager(ParseManager):
+    webhook_type = "Ncloud_CloudInsight"
 
-        self.cloud_service_group = "SpaceONE"
-        self.cloud_service_type = "Webhook"
-        self.provider = "naver cloud"
-        self.metadata_path = "metadata/spaceone/webhook.yaml"
+    def parse(self, raw_data: dict) -> dict:
+        """
 
-    # def collect_resources(self, options, secret_data, prod_key, page_data, schema):
-    #     try:
-    #         yield from self.collect_cloud_service_type(options, secret_data, prod_key, page_data, schema)
-    #         yield from self.collect_cloud_service(options, secret_data,  prod_key, page_data, schema)
-    #     except Exception as e:
-    #         yield make_error_response(
-    #             error=e,
-    #             provider=self.provider,
-    #             cloud_service_group=self.cloud_service_group,
-    #             cloud_service_type=self.cloud_service_type,
-    #         )
+        :param raw_data:
+        :return EventResponse:
+            "results": EventResponse
+        """
+        results = []
 
-    # def collect_cloud_service_type(self, options, secret_data,  prod_key, pages, schema):
-    #     cloud_service_type = make_cloud_service_type(
-    #         name=self.cloud_service_type,
-    #         group=self.cloud_service_group,
-    #         provider=self.provider,
-    #         metadata_path=self.metadata_path,
-    #         is_primary=True,
-    #         is_major=True,
-    #     )
-    #
-    #     yield make_response(
-    #         cloud_service_type=cloud_service_type,
-    #         match_keys=[["name", "reference.resource_id", "account", "provider"]],
-    #         resource_type="monitoring.CloudServiceType",
-    #     )
+        _LOGGER.debug(f"[AWSPersonalHealthDashboard] parse => {json.dumps(raw_data, indent=2)}")
 
-    def parse(self, options, secret_data, prod_key, page_data) -> list:
+        event_type_category = raw_data.get("detail", {}).get("eventTypeCategory", "")
+
+        event: dict = {
+            'event_key': self.generate_event_key(raw_data),
+            'event_type': self.get_event_type(""),
+            'severity': self.get_severity(""),
+            'resource': self._get_resource(raw_data),#not required
+            'title': self._change_string_format(raw_data),
+            'rule': event_type_category,#not required
+            'occurred_at': self.convert_to_iso8601(raw_data.get("createTime")),
+            'additional_info': self.get_additional_info(raw_data)
+        }
+
+        results.append(event)
+        _LOGGER.debug(f"[Ncloud_Webhook] parse => {event}")
+
+        return {
+            "results": results
+        }
+
+    def generate_event_key(self, raw_data: dict) -> str:
+        return raw_data.get("id")
+
+    def get_event_type(self, event_state: str) -> str:
+        return "ALERT"
+
+    def get_severity(self, raw_: str) -> str:
+        return "INFO"
+
+    @staticmethod
+    def _change_string_format(raw_data):
+        return raw_data.get("groupName")
+
+    @staticmethod
+
+    def get_additional_info(self, raw_data: dict) -> dict:
+        return {
+            "prod_key" : raw_data.get("prodKey"),
+            'product_name' : raw_data.get("productName"),
+            "update_time" : self.convert_to_iso8601(raw_data.get("updateTime")),
+            'region_code' : raw_data.get("regionCode")
+        }
+
+    @staticmethod
+    def _get_resource(raw_data: dict) -> dict:
+        return {
+            "resource_id": raw_data.get("detail", {}).get("eventArn", ""),
+            "resource_type": raw_data.get("source", "aws.health")
+        }
+
+    def parse11(self, options, secret_data, prod_key, page_data) -> list:
         results = []
         webhook_connector = WebhookConnector(secret_data=secret_data, prod_key=prod_key, page_data = page_data)
         webhook_instances = webhook_connector.list_metrics_group()
