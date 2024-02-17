@@ -22,16 +22,16 @@ class WebhookManager(ParseManager):
 
         _LOGGER.debug(f"[AWSPersonalHealthDashboard] parse => {json.dumps(raw_data, indent=2)}")
 
-        event_type_category = raw_data.get("detail", {}).get("eventTypeCategory", "")
+        #event_type_category = raw_data.get("detail", {}).get("eventTypeCategory", "")
 
         event: dict = {
             'event_key': self.generate_event_key(raw_data),
             'event_type': self.get_event_type(""),
-            'severity': self.get_severity(""),
+            'severity': self.get_severity(raw_data),
             'resource': self._get_resource(raw_data),#not required
             'title': self._change_string_format(raw_data),
-            'rule': event_type_category,#not required
-            'occurred_at': self.convert_to_iso8601(raw_data.get("createTime")),
+            'rule': self._get_rule(raw_data),#not required
+            'occurred_at': self.convert_to_iso8601(raw_data.get("startTime")),
             'additional_info': self.get_additional_info(raw_data)
         }
 
@@ -43,33 +43,46 @@ class WebhookManager(ParseManager):
         }
 
     def generate_event_key(self, raw_data: dict) -> str:
-        return raw_data.get("id")
+        return raw_data.get("eventId")
 
     def get_event_type(self, event_state: str) -> str:
         return "ALERT"
 
-    def get_severity(self, raw_: str) -> str:
-        return "INFO"
+    def get_severity(self, raw_data: dict) -> str:
+        return raw_data.get("eventLevel")
 
     @staticmethod
     def _change_string_format(raw_data):
-        return raw_data.get("groupName")
+        event_title = raw_data.get("ruleName") + "-" +raw_data.get("metric")
+        return event_title
 
     @staticmethod
-
     def get_additional_info(self, raw_data: dict) -> dict:
-        return {
-            "prod_key" : raw_data.get("prodKey"),
-            'product_name' : raw_data.get("productName"),
-            "update_time" : self.convert_to_iso8601(raw_data.get("updateTime")),
-            'region_code' : raw_data.get("regionCode")
+        additional_info = {
+            "prod_key": raw_data.get("prodKey"),
+            'product_name': raw_data.get("prodName"),
+            'metric': raw_data.get("metric"),
+            'detect_value': raw_data.get("detectValue"),
+            'rule_id': raw_data.get("ruleId"),
+            'notification_groups': raw_data.get("notificationGroups"),
+            "criteria" : raw_data.get("criteria")
         }
+        dimension = raw_data.get("dimension", {})
+        for key, value in dimension.items():
+            additional_info[f'{key}'] = value
+
+        return additional_info
 
     @staticmethod
     def _get_resource(raw_data: dict) -> dict:
         return {
-            "resource_id": raw_data.get("detail", {}).get("eventArn", ""),
-            "resource_type": raw_data.get("source", "aws.health")
+            "name": raw_data.get("resourceName")
+        }
+
+    def _get_rule(self, raw_data: dict) -> dict:
+        return {
+            'rule_id' : raw_data.get("ruleId"),
+            'rule_name' : raw_data.get("ruleName")
         }
 
     def parse11(self, options, secret_data, prod_key, page_data) -> list:
