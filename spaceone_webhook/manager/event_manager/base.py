@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from typing import Union
 from abc import abstractmethod, ABCMeta
 from dateutil import parser
@@ -47,5 +48,8 @@ class ParseManager(BaseManager, metaclass=ABCMeta):
         raise ERROR_INVALID_WEBHOOK_TYPE(webhook_type=webhook_type)
 
     @staticmethod
-    def convert_to_iso8601(raw_time: str) -> Union[str, None]:
-        return utils.datetime_to_iso8601(parser.parse(raw_time))
+    def convert_to_iso8601(timestamp: int) -> str:
+        timestamp_in_seconds = timestamp / 1000.0
+        dt = datetime.utcfromtimestamp(timestamp_in_seconds)
+        return dt.isoformat() + 'Z'
+
