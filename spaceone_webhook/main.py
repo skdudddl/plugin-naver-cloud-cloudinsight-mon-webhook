@@ -2,7 +2,7 @@ from typing import List
 import json
 from spaceone.monitoring.plugin.webhook.lib.server import WebhookPluginServer
 from spaceone_webhook.manager.event_manager.base import ParseManager
-from spaceone_webhook.manager.event_manager.webhook_manager import WebhookManager
+from spaceone_webhook.manager.event_manager.cloud_insight_manager import CloudInsightManager
 app = WebhookPluginServer()
 
 
@@ -71,22 +71,20 @@ def event_parse(params: dict) -> List[dict]:
     options = params["options"]
     data = params["data"]
 
-    # parse_mgr = ParseManager(data.get("events"))
-    # return parse_mgr.parse()
-    #return parse_mgr.parse(data.get("events", ""))
+    if data.get("type") is None:
+        data["type"] = "Ncloud_CloudInsight"
 
-    # Check if webhook messages are SNS subscription
     webhook_type = _get_webhook_type(data)
     parse_mgr = ParseManager.get_parse_manager_by_webhook_type(webhook_type)
 
     if webhook_type == "Ncloud_CloudInsight":
         return parse_mgr.parse(data.get("events"))
     else:
-        return parse_mgr.parse(json.loads(data.get("events", "")))
+        return parse_mgr.parse(json.loads(data))
 
 
 def _get_webhook_type(data: dict) -> str:
-    if data.get("notificationGroups") == "Recipient: NotiGrp001" :
-        return "Ncloud_CloudInsight"
+    if data.get("type") == "OUT_GOING" :
+        return "Ncloud_Integration"
     else:
         return "Ncloud_CloudInsight"
