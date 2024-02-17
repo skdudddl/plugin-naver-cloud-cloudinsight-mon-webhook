@@ -30,19 +30,45 @@ class TestWebhook(TestCase):
 
     def test_parse(self):
         cloudinsight_param = {
-
+            "options": {},
+            "data": {
+              "events": {
+                  "calc": "AVG",
+                  "calcSlidingGroupKey": "",
+                  "criteria": 0,
+                  "detectValue": 0.7944445,
+                  "dimension": {
+                    "instanceNo": "xxxxxxx",
+                    "type": "svr"
+                  },
+                  "endTime": 0,
+                  "eventId": "xxxxxxxxxxxxxxxxxx",
+                  "eventLevel": "INFO",
+                  "metric": "avg_write_cnt",
+                  "notificationGroups": "Recipient: NotiGrp001",
+                  "operator": "GE",
+                  "prodKey": "xxxxxxxxxxxxxxxxxx",
+                  "prodName": "System/Server",
+                  "resourceName": "svr-pub",
+                  "ruleId": "xxxxxxxxxxxxxxxxxx",
+                  "ruleName": "rule002",
+                  "startTime": 1596088621223
+                }
+            }
         }
+
         options = {}
         secret_data = self.secrets
         prod_key = self.keys
         page_data = self.pages
-        webhook_manager = WebhookManager(secret_data=secret_data, prod_key=prod_key, page_data=page_data)
+        #webhook_manager = WebhookManager(secret_data=secret_data, prod_key=prod_key, page_data=page_data)
         # for webhook_instance in webhook_manager.parse(options={}, secret_data=secret_data, prod_key=prod_key, page_data=page_data, schema={}):
         #     params = {"options": options, "data": webhook_instance}
         #     parsed_data = self.monitoring.Event.parse(params)
         #     print_json(parsed_data)
         #     print()
-        cloudinsight_pared_data = self.monitoring.Event.parse({'options': cloudinsight_param.get("options"), 'data': cloudinsight_param.get('data')})
+
+        cloudinsight_pared_data = self.monitoring.Event.parse({'options' : {}, 'data' : cloudinsight_param.get('data')})
         print_json(cloudinsight_pared_data)
         print()
 
