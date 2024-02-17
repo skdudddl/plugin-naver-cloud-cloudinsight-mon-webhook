@@ -41,7 +41,7 @@ class ParseManager(BaseManager, metaclass=ABCMeta):
         pass
 
     @classmethod
-    def get_parse_manager_by_webhook_type(cls, webhook_type):
+    def get_parse_manager_by_webhook_type(cls, webhook_type : str):
         for subclass in cls.__subclasses__():
             if subclass.webhook_type == webhook_type:
                 return subclass()

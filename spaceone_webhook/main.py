@@ -71,22 +71,22 @@ def event_parse(params: dict) -> List[dict]:
     options = params["options"]
     data = params["data"]
 
-    parse_mgr = ParseManager.get_parse_manager_by_webhook_type(data)
-    #return parse_mgr.parse(data)
-    return parse_mgr.parse(json.loads(data.get("events", "")))
+    # parse_mgr = ParseManager(data.get("events"))
+    # return parse_mgr.parse()
+    #return parse_mgr.parse(data.get("events", ""))
 
     # Check if webhook messages are SNS subscription
-#     webhook_type = _get_webhook_type(data)
-#     parse_mgr = ParseManager.get_parse_manager_by_webhook_type(webhook_type)
-#
-#     if webhook_type == "Ncloud_webhook":
-#         return parse_mgr.parse(data)
-#     else:
-#         return parse_mgr.parse(json.loads(data.get("Message", "")))
-#
-#
-# def _get_webhook_type(data: dict) -> str:
-#     if data.get("Type") == "SubscriptionConfirmation":
-#         return "Ncloud_webhook"
-#     else:
-#         return "AWS_CLOUDWATCH"
+    webhook_type = _get_webhook_type(data)
+    parse_mgr = ParseManager.get_parse_manager_by_webhook_type(webhook_type)
+
+    if webhook_type == "Ncloud_CloudInsight":
+        return parse_mgr.parse(data.get("events"))
+    else:
+        return parse_mgr.parse(json.loads(data.get("events", "")))
+
+
+def _get_webhook_type(data: dict) -> str:
+    if data.get("notificationGroups") == "Recipient: NotiGrp001" :
+        return "Ncloud_CloudInsight"
+    else:
+        return "Ncloud_CloudInsight"
