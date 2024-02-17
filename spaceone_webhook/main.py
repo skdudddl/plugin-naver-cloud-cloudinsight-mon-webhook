@@ -70,13 +70,10 @@ def event_parse(params: dict) -> List[dict]:
     """
     options = params["options"]
     data = params["data"]
-    secret_data = params["options"].get("secret_data")
-    prod_key = params["options"].get("prod_key")
-    page_data = params["options"].get("page_data")
-    #schema = params.get("schema")
 
-    webhook_mgr = WebhookManager(secret_data=secret_data, prod_key=prod_key, page_data = page_data)
-    return webhook_mgr.parse(options, secret_data, prod_key, page_data)
+    parse_mgr = ParseManager.get_parse_manager_by_webhook_type(data)
+    #return parse_mgr.parse(data)
+    return parse_mgr.parse(json.loads(data.get("events", "")))
 
     # Check if webhook messages are SNS subscription
 #     webhook_type = _get_webhook_type(data)
