@@ -8,7 +8,7 @@ from spaceone_webhook.manager.event_manager.base import ParseManager
 _LOGGER = logging.getLogger("spaceone")
 
 
-class WebhookManager(ParseManager):
+class CloudInsightManager(ParseManager):
     webhook_type = "Ncloud_CloudInsight"
 
     def parse(self, raw_data: dict) -> dict:
