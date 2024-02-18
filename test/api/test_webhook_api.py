@@ -2,8 +2,7 @@ import logging
 import os
 from spaceone.core import utils, config
 from spaceone.tester import TestCase, print_json, to_json
-from google.protobuf.json_format import MessageToDict
-from spaceone_webhook.manager.event_manager.webhook_manager import WebhookManager
+
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,18 +56,24 @@ class TestWebhook(TestCase):
             }
         }
 
-        options = {}
-        secret_data = self.secrets
-        prod_key = self.keys
-        page_data = self.pages
-        #webhook_manager = WebhookManager(secret_data=secret_data, prod_key=prod_key, page_data=page_data)
-        # for webhook_instance in webhook_manager.parse(options={}, secret_data=secret_data, prod_key=prod_key, page_data=page_data, schema={}):
-        #     params = {"options": options, "data": webhook_instance}
-        #     parsed_data = self.monitoring.Event.parse(params)
-        #     print_json(parsed_data)
-        #     print()
+        integration_param = {
+            "options": {},
+            "data": {
+              "headers": {
+                "content-type": "application/json; charset=utf-8"
+              },
+              "id": "111",
+              "name": "event test",
+              "payload": "{\n\t\"text\": \"#{DOMAIN_CODE} => #{RULE_NAME} 's event is #{EVENT_STATUS}. The condition is #{RESOURCE_NAME} 's #{DIMENSIONS} #{METRIC} #{OPERATOR} #{CRITERIA}. The current value is #{VALUE}\"\n}",
+              "type": "OUT_GOING",
+              "updateTime": 1682667085590,
+              "url": "https://url"
+            }
+        }
 
-        cloudinsight_pared_data = self.monitoring.Event.parse({'options' : {}, 'data' : cloudinsight_param.get('data')})
-        print_json(cloudinsight_pared_data)
+        pared_data = self.monitoring.Event.parse({'options' : {}, 'data' : cloudinsight_param.get('data')})
+        print_json(pared_data)
         print()
-
+        pared_data = self.monitoring.Event.parse({'options' : {}, 'data' : integration_param.get("data")})
+        print_json(pared_data)
+        print()
