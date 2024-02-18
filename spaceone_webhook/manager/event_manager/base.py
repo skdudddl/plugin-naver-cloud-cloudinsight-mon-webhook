@@ -41,15 +41,18 @@ class ParseManager(BaseManager, metaclass=ABCMeta):
         pass
 
     @classmethod
-    def get_parse_manager_by_webhook_type(cls, webhook_type : str):
+    def get_parse_manager_by_webhook_type(cls, webhook_type):
         for subclass in cls.__subclasses__():
             if subclass.webhook_type == webhook_type:
                 return subclass()
         raise ERROR_INVALID_WEBHOOK_TYPE(webhook_type=webhook_type)
 
     @staticmethod
-    def convert_to_iso8601(timestamp: int) -> str:
-        timestamp_in_seconds = timestamp / 1000.0
-        dt = datetime.utcfromtimestamp(timestamp_in_seconds)
-        return dt.isoformat() + 'Z'
+    def convert_to_iso8601(timestamp: int) -> Union[str, None]:
+        if timestamp is not None:
+            timestamp_in_seconds = timestamp / 1000.0
+            dt = datetime.utcfromtimestamp(timestamp_in_seconds)
+            return dt.isoformat() + 'Z'
+        else:
+            return "Undefined"
 
