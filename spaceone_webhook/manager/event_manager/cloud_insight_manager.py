@@ -9,7 +9,7 @@ _LOGGER = logging.getLogger("spaceone")
 
 
 class CloudInsightManager(ParseManager):
-    webhook_type = "Ncloud_CloudInsight"
+    webhook_type = "CloudInsight"
 
     def parse(self, raw_data: dict) -> dict:
         """
