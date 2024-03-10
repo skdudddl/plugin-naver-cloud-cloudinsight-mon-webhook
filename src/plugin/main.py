@@ -1,6 +1,6 @@
 from typing import List
 from spaceone.monitoring.plugin.webhook.lib.server import WebhookPluginServer
-from src.plugin.manager.event_manager.base import ParseManager
+from plugin.manager.event_manager.base import ParseManager
 app = WebhookPluginServer()
 
 

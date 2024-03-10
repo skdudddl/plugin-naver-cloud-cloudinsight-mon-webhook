@@ -1,6 +1,6 @@
 import logging
 import json
-from src.plugin.manager.event_manager.base import ParseManager
+from plugin.manager.event_manager.base import ParseManager
 
 _LOGGER = logging.getLogger("spaceone")
 
