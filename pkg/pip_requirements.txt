@@ -1,5 +1,4 @@
 spaceone-core==2.0.30
 spaceone-api==2.0.40
 spaceone-tester==1.11.0
-spaceone-inventory==2.0.dev86
-spaceone-monitoring
+spaceone-monitoring==2.0.dev49
