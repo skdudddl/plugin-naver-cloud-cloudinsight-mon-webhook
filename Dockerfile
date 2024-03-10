@@ -5,6 +5,7 @@ ENV SPACEONE_PORT 50051
 ENV SERVER_TYPE grpc
 ENV PKG_DIR /tmp/pkg
 ENV SRC_DIR /tmp/src
+ENV TEST_DIR /tmp/test
 
 RUN apt update && apt upgrade -y
 
@@ -14,6 +15,7 @@ RUN pip install --upgrade pip && \
     pip install --upgrade --pre spaceone-monitoring
 
 COPY src ${SRC_DIR}
+COPY test ${TEST_DIR}
 ARG CACHEBUST=1
 WORKDIR ${SRC_DIR}
 RUN python3 setup.py install && \
