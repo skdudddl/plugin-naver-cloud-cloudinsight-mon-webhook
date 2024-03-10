@@ -4,7 +4,7 @@ from typing import Union
 from abc import abstractmethod, ABCMeta
 
 from spaceone.core.manager import BaseManager
-from src.plugin.error import *
+from plugin.error import *
 
 __all__ = ['ParseManager']
 _LOGGER = logging.getLogger('spaceone')
