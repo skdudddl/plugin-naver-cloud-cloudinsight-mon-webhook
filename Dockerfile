@@ -5,7 +5,7 @@ ENV SPACEONE_PORT 50051
 ENV SERVER_TYPE grpc
 ENV PKG_DIR /tmp/pkg
 ENV SRC_DIR /tmp/src
-ENV TEST_DIR /tmp/test
+ENV TEST_DIR /tmp/test/api
 
 RUN apt update && apt upgrade -y
 
