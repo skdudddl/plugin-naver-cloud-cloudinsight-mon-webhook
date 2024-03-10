@@ -1,0 +1,1 @@
+from plugin.manager.event_manager.cloud_insight_manager import CloudInsightManager
