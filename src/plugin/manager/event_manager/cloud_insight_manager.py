@@ -1,9 +1,6 @@
 import logging
 import json
-from spaceone.core.manager import BaseManager
-from spaceone.inventory.plugin.collector.lib import *
-from spaceone_webhook.connector.webhook_connector import WebhookConnector
-from spaceone_webhook.manager.event_manager.base import ParseManager
+from src.plugin.manager.event_manager.base import ParseManager
 
 _LOGGER = logging.getLogger("spaceone")
 
