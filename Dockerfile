@@ -11,7 +11,7 @@ RUN apt update && apt upgrade -y
 COPY pkg/*.txt ${PKG_DIR}/
 RUN pip install --upgrade pip && \
     pip install --upgrade -r ${PKG_DIR}/pip_requirements.txt \
-    pipt istall --upgrade --pre spaceone-monitoring
+    pip istall --upgrade --pre spaceone-monitoring
 
 COPY src ${SRC_DIR}
 ARG CACHEBUST=1
