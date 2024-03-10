@@ -1,3 +1,0 @@
-from spaceone_webhook.manager.event_manager.base import ParseManager
-from spaceone_webhook.manager.event_manager.cloud_insight_manager import CloudInsightManager
-from spaceone_webhook.manager.event_manager.integration_manager import IntegrationManager
