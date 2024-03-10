@@ -22,4 +22,4 @@ RUN python3 setup.py install && \
 EXPOSE ${SPACEONE_PORT}
 
 ENTRYPOINT ["spaceone"]
-CMD ["run", "grpc-server", "spaceone.monitoring"]
+CMD ["run", "grpc-server", "src.plugin"]
