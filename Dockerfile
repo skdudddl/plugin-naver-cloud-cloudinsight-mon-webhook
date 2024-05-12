@@ -19,7 +19,7 @@ COPY src ${SRC_DIR}
 COPY test ${TEST_DIR}
 ARG CACHEBUST=1
 WORKDIR ${SRC_DIR}
-RUN python3 setup.py install &&\
+RUN python3 setup.py install && \
      rm -rf /tmp/*
 
 EXPOSE ${SPACEONE_PORT}
