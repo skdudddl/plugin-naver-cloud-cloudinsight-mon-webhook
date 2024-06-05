@@ -57,5 +57,5 @@ jobs:
           with:
             context: .
             push: true 
-            tags: nana0712/${{ env.SERVICE }}:${{ env.VERSION }}
+            tags: nana0712/plugin-naver-cloud-mon-webhook:${{ env.VERSION }}
             
