@@ -57,5 +57,6 @@ jobs:
           with:
             context: .
             push: true 
+            platforms: linux/arm64
             tags: nana0712/plugin-naver-cloud-mon-webhook:${{ env.VERSION }}
             
