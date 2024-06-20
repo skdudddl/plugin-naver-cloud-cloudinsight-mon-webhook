@@ -28,7 +28,7 @@ class IntegrationManager(ParseManager):
             #'resource': self._get_resource(raw_data),#not required
             'title': self._change_string_format(raw_data),
             #'rule': raw_data.get("ruleName"),#not required
-            'description': raw_data.get("payload").get(("text")),
+            'description': raw_data.get("text"),
             'occurred_at': self.convert_to_iso8601(raw_data.get("startTime")),
             'additional_info': self.get_additional_info(raw_data)
         }
