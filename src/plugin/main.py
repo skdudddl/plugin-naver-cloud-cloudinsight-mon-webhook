@@ -69,7 +69,8 @@ def event_parse(params: dict) -> List[dict]:
     options = params["options"]
     data = params["data"]
 
-    webhook_type = _get_webhook_type(data)
+    # webhook_type = _get_webhook_type(data)
+    webhook_type = "Integration"
     parse_mgr = ParseManager.get_parse_manager_by_webhook_type(webhook_type)
 
     if webhook_type == "CloudInsight":
