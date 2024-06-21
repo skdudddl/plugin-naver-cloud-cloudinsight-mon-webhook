@@ -1,5 +1,8 @@
 import logging
 import json
+
+from spaceone.core.utils import random_string
+
 from plugin.manager.event_manager.base import ParseManager
 
 _LOGGER = logging.getLogger("spaceone")
@@ -43,10 +46,10 @@ class IntegrationManager(ParseManager):
         }
 
     def generate_event_key(self, raw_data: dict) -> str:
-        return raw_data.get("eventId")
+        return random_string()
 
     def get_event_type(self, raw_data: dict) -> str:
-        return raw_data.get("type")
+        return "ALERT"
 
     def get_severity(self, raw_data: dict) -> str:
         if raw_data.get("eventLevel") is not None:
